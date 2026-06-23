@@ -10,65 +10,64 @@ export default function Navbar() {
 
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const router = useRouter();
 
 
+  const loadUser = async () => {
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+
+    if (!session) {
+      setUser(null);
+      return;
+    }
+
+
+    const { data: profile, error } = await supabase
+      .from("profile")
+      .select("is_admin")
+      .eq("id", session.user.id)
+      .single();
+
+
+    if (error) {
+      console.log("Profile error:", error.message);
+    }
+
+
+    const admin =
+      profile?.is_admin === true;
+
+
+    setUser({
+      ...session.user,
+      is_admin: admin,
+    });
+
+  };
+
+
+
   useEffect(() => {
 
-    const getUser = async () => {
-
-      const {
-        data: { session }
-      } = await supabase.auth.getSession();
-
-
-      if (!session) {
-        setUser(null);
-        return;
-      }
-
-
-      setUser(session.user);
-
-
-      const { data: profile, error } =
-  await supabase
-    .from("profile")
-    .select("is_admin")
-    .eq("id", session.user.id)
-    .maybeSingle();
-
-
-if (!error && profile?.is_admin === true) {
-  setIsAdmin(true);
-} else {
-  setIsAdmin(false);
-}
-
-
-      if (profile?.is_admin === true) {
-        setIsAdmin(true);
-      }
-
-    };
-
-
-    getUser();
+    loadUser();
 
 
     const {
-      data: listener
+      data: authListener,
     } = supabase.auth.onAuthStateChange(
       () => {
-        getUser();
+        loadUser();
       }
     );
 
 
     return () => {
-      listener.subscription.unsubscribe();
+      authListener.subscription.unsubscribe();
     };
 
 
@@ -78,15 +77,19 @@ if (!error && profile?.is_admin === true) {
 
   const handleInvest = () => {
 
-    if (user) {
-
-      router.push("/dashboard");
-
-    } else {
-
-      router.push("/register");
-
+    if (user?.is_admin) {
+      router.push("/admin");
+      return;
     }
+
+
+    if (user) {
+      router.push("/dashboard");
+      return;
+    }
+
+
+    router.push("/register");
 
   };
 
@@ -97,7 +100,6 @@ if (!error && profile?.is_admin === true) {
     await supabase.auth.signOut();
 
     setUser(null);
-    setIsAdmin(false);
 
     router.push("/");
 
@@ -123,11 +125,21 @@ Vertex <span className="text-[#D4AF37]">Capital</span>
 
 <nav className="hidden xl:flex gap-6 text-white">
 
+
 <Link href="/">Home</Link>
+
 <Link href="/about">About</Link>
-<Link href="/investments">Investments</Link>
+
+<Link href="/investments">
+Investments
+</Link>
+
 <Link href="/faq">FAQ</Link>
-<Link href="/contact">Contact</Link>
+
+<Link href="/contact">
+Contact
+</Link>
+
 
 
 {user && (
@@ -137,30 +149,25 @@ Dashboard
 )}
 
 
-{isAdmin && (
+
+{user?.is_admin && (
 <Link href="/admin">
 Admin
 </Link>
 )}
 
 
+
 </nav>
+
+
 
 
 
 <div className="hidden xl:flex items-center gap-4">
 
 
-{!user ? (
-
-<Link
-href="/login"
-className="border border-white/20 px-5 py-3 rounded-full"
->
-Login
-</Link>
-
-) : (
+{user ? (
 
 <button
 onClick={handleLogout}
@@ -169,13 +176,23 @@ className="border border-white/20 px-5 py-3 rounded-full"
 Logout
 </button>
 
+
+) : (
+
+<Link
+href="/login"
+className="border border-white/20 px-5 py-3 rounded-full"
+>
+Login
+</Link>
+
 )}
 
 
 
 <button
 onClick={handleInvest}
-className="bg-[#D4AF37] text-black px-6 py-3 rounded-full font-semibold"
+className="bg-[#D4AF37] text-black px-6 py-3 rounded-full font-bold"
 >
 Start Investing
 </button>
@@ -186,9 +203,10 @@ Start Investing
 
 
 
+
 <button
-onClick={()=>setOpen(!open)}
-className="xl:hidden text-3xl"
+onClick={() => setOpen(!open)}
+className="xl:hidden text-3xl text-white"
 >
 {open ? <FiX/> : <FiMenu/>}
 </button>
@@ -199,16 +217,26 @@ className="xl:hidden text-3xl"
 
 
 
+
 {open && (
 
 <div className="xl:hidden bg-[#071426] p-6 text-white flex flex-col gap-5">
 
 
 <Link href="/">Home</Link>
+
 <Link href="/about">About</Link>
-<Link href="/investments">Investments</Link>
+
+<Link href="/investments">
+Investments
+</Link>
+
 <Link href="/faq">FAQ</Link>
-<Link href="/contact">Contact</Link>
+
+<Link href="/contact">
+Contact
+</Link>
+
 
 
 {user && (
@@ -218,11 +246,13 @@ Dashboard
 )}
 
 
-{isAdmin && (
+
+{user?.is_admin && (
 <Link href="/admin">
 Admin
 </Link>
 )}
+
 
 
 
@@ -235,6 +265,7 @@ Start Investing
 
 
 
+
 {user ? (
 
 <button
@@ -243,6 +274,7 @@ className="text-red-400 text-left"
 >
 Logout
 </button>
+
 
 ) : (
 

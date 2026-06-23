@@ -61,18 +61,18 @@ export default function Plans() {
 
 
             <p className="text-[#D4AF37] text-5xl font-bold mt-6">
-              10%
+              5%
             </p>
 
             <p className="text-gray-400">
-              Annual ROI
+              Weekly ROI
             </p>
 
 
             <ul className="space-y-4 mt-8 text-gray-300">
               <li>Minimum $100</li>
-              <li>12 Months Tenure</li>
-              <li>Quarterly Reports</li>
+              <li>7 Days Duration</li>
+              <li>Weekly Reports</li>
             </ul>
 
 
@@ -102,18 +102,18 @@ export default function Plans() {
 
 
             <p className="text-[#D4AF37] text-5xl font-bold mt-6">
-              12%
+              10%
             </p>
 
 
             <p className="text-gray-400">
-              Annual ROI
+              Bi-Weekly ROI
             </p>
 
 
             <ul className="space-y-4 mt-8 text-gray-300">
               <li>Minimum $500</li>
-              <li>18 Months Tenure</li>
+              <li>14 Days Duration</li>
               <li>Priority Support</li>
             </ul>
 
@@ -150,13 +150,13 @@ export default function Plans() {
 
 
             <p className="text-gray-400">
-              Annual ROI
+              Monthly ROI
             </p>
 
 
             <ul className="space-y-4 mt-8 text-gray-300">
               <li>Minimum $1000</li>
-              <li>24 Months Tenure</li>
+              <li>30 Days Duration</li>
               <li>Dedicated Advisor</li>
             </ul>
 
