@@ -55,6 +55,12 @@ export default function Contact() {
               value="false"
             />
 
+            <input
+  type="hidden"
+  name="_next"
+  value="https://vertex-capital-website.vercel.app/"
+/>
+
 
 
             <input
