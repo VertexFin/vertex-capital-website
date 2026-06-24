@@ -55,12 +55,12 @@ export default function Plans() {
 
           <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
 
-            <h3 className="text-3xl font-bold">
+            <h3 className="text-3xl font-bold text-white">
               Starter Plan
             </h3>
 
 
-            <p className="text-[#D4AF37] text-5xl font-bold mt-6">
+            <p className="text-[#D4AF37] text-5xl font-bold text-white mt-6">
               5%
             </p>
 
@@ -70,7 +70,7 @@ export default function Plans() {
 
 
             <ul className="space-y-4 mt-8 text-gray-300">
-              <li>Minimum $100</li>
+              <li>$100 - $4,999</li>
               <li>7 Days Duration</li>
               <li>Weekly Reports</li>
             </ul>
@@ -96,7 +96,7 @@ export default function Plans() {
           <div className="bg-[#D4AF37]/10 border border-[#D4AF37] rounded-3xl p-8">
 
 
-            <h3 className="text-3xl font-bold">
+            <h3 className="text-3xl font-bold text-white">
               Premium Plan
             </h3>
 
@@ -112,7 +112,7 @@ export default function Plans() {
 
 
             <ul className="space-y-4 mt-8 text-gray-300">
-              <li>Minimum $500</li>
+              <li>$5,000 - $9,999</li>
               <li>14 Days Duration</li>
               <li>Priority Support</li>
             </ul>
@@ -139,7 +139,7 @@ export default function Plans() {
           <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
 
 
-            <h3 className="text-3xl font-bold">
+            <h3 className="text-3xl font-bold text-white">
               Wealth Builder
             </h3>
 
@@ -155,7 +155,7 @@ export default function Plans() {
 
 
             <ul className="space-y-4 mt-8 text-gray-300">
-              <li>Minimum $1000</li>
+              <li>$10,000 - $19,999</li>
               <li>30 Days Duration</li>
               <li>Dedicated Advisor</li>
             </ul>
@@ -185,7 +185,7 @@ export default function Plans() {
       <div className="mt-24">
 
 
-        <h2 className="text-4xl font-bold text-center">
+        <h2 className="text-4xl font-bold text-white text-center">
           How It Works
         </h2>
 

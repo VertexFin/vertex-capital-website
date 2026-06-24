@@ -41,7 +41,7 @@ export default function InvestmentCalculator() {
             Investment Calculator
           </span>
 
-          <h2 className="text-5xl font-bold mt-4">
+          <h2 className="text-5xl font-bold text-white mt-4">
             Estimate Your Returns
           </h2>
 
@@ -102,7 +102,7 @@ export default function InvestmentCalculator() {
                 Investment Amount
               </p>
 
-              <h3 className="text-4xl font-bold mt-2">
+              <h3 className="text-4xl font-bold text-white mt-2">
                 ${amount.toLocaleString()}
               </h3>
             </div>
@@ -132,7 +132,7 @@ export default function InvestmentCalculator() {
                 Maturity Value
               </p>
 
-              <h3 className="text-5xl font-bold mt-2">
+              <h3 className="text-5xl font-bold text-white mt-2">
                 ${total.toLocaleString()}
               </h3>
             </div>

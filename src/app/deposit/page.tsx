@@ -92,7 +92,29 @@ return (
 Deposit Funds
 </h1>
 
+<div className="bg-[#0E223D] p-6 rounded-2xl mb-8">
+  <h3 className="text-xl font-bold text-white mb-4">
+    Deposit Wallet Address
+  </h3>
 
+  {coin === "USDT" && (
+    <p className="break-all text-[#D4AF37]">
+      YOUR_USDT_WALLET_ADDRESS
+    </p>
+  )}
+
+  {coin === "BTC" && (
+    <p className="break-all text-[#D4AF37]">
+      bc1qvetmpa2d5ftxg60g3yt8mh2tk26yfty9hrpfka
+    </p>
+  )}
+
+  {coin === "ETH" && (
+    <p className="break-all text-[#D4AF37]">
+      YOUR_ETH_WALLET_ADDRESS
+    </p>
+  )}
+</div>
 
 <form
 onSubmit={submitDeposit}

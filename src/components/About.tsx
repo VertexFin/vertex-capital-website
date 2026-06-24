@@ -71,7 +71,7 @@ export default function About() {
 
       <div className="mt-20">
 
-  <h2 className="text-4xl font-bold">
+  <h2 className="text-4xl font-bold text-white">
     Why Choose Vertex Capital
   </h2>
 
@@ -110,7 +110,7 @@ export default function About() {
 
 <div className="mt-24">
 
-  <h2 className="text-4xl font-bold text-center">
+  <h2 className="text-4xl font-bold text-white text-center">
     What Our Investors Say
   </h2>
 
@@ -120,7 +120,7 @@ export default function About() {
       <p>
         Vertex Capital has helped me build a disciplined investment strategy.
       </p>
-      <h4 className="mt-4 font-bold">
+      <h4 className="mt-4 font-bold text-white">
         Michael Johnson
       </h4>
     </div>
@@ -129,7 +129,7 @@ export default function About() {
       <p>
         Professional service and transparent investment opportunities.
       </p>
-      <h4 className="mt-4 font-bold">
+      <h4 className="mt-4 font-bold text-white">
         Sarah Williams
       </h4>
     </div>
@@ -138,7 +138,7 @@ export default function About() {
       <p>
         One of the best investment experiences I've had.
       </p>
-      <h4 className="mt-4 font-bold">
+      <h4 className="mt-4 font-bold text-white">
         David Roberts
       </h4>
     </div>
