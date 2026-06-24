@@ -11,7 +11,6 @@ const router = useRouter();
 
 
 const [amount,setAmount] = useState("");
-const [coin,setCoin] = useState("USDT");
 const [txHash,setTxHash] = useState("");
 const [loading,setLoading] = useState(false);
 
@@ -40,14 +39,13 @@ return;
 
 
 
-
 const {error}= await supabase
 .from("deposits")
 .insert({
 
 user_id:session.user.id,
 amount:Number(amount),
-coin,
+coin:"BTC",
 tx_hash:txHash,
 status:"pending"
 
@@ -88,38 +86,52 @@ return (
 <div className="max-w-xl mx-auto bg-white/5 border border-white/10 rounded-3xl p-8">
 
 
-<h1 className="text-4xl font-bold mb-8">
-Deposit Funds
+
+<h1 className="text-4xl font-bold text-white mb-8">
+Deposit Bitcoin
 </h1>
 
+
+
+
 <div className="bg-[#0E223D] p-6 rounded-2xl mb-8">
-  <h3 className="text-xl font-bold text-white mb-4">
-    Deposit Wallet Address
-  </h3>
 
-  {coin === "USDT" && (
-    <p className="break-all text-[#D4AF37]">
-      YOUR_USDT_WALLET_ADDRESS
-    </p>
-  )}
 
-  {coin === "BTC" && (
-    <p className="break-all text-[#D4AF37]">
-      bc1qvetmpa2d5ftxg60g3yt8mh2tk26yfty9hrpfka
-    </p>
-  )}
+<h3 className="text-xl font-bold text-white mb-4">
+Bitcoin Deposit Address
+</h3>
 
-  {coin === "ETH" && (
-    <p className="break-all text-[#D4AF37]">
-      YOUR_ETH_WALLET_ADDRESS
-    </p>
-  )}
+
+
+<p className="text-[#D4AF37] break-all font-medium">
+
+bc1qvetmpa2d5ftxg60g3yt8mh2tk26yfty9hrpfka
+
+</p>
+
+
+
+<p className="text-gray-400 mt-3 text-sm">
+
+Send only Bitcoin (BTC) to this address.
+After sending your payment, enter the transaction hash below.
+
+</p>
+
+
+
 </div>
+
+
+
+
 
 <form
 onSubmit={submitDeposit}
 className="space-y-5"
 >
+
+
 
 
 
@@ -133,29 +145,10 @@ value={amount}
 
 onChange={(e)=>setAmount(e.target.value)}
 
-className="w-full p-4 rounded-xl bg-[#0E223D]"
+className="w-full p-4 rounded-xl bg-[#0E223D] text-white"
 
 />
 
-
-
-
-<select
-
-value={coin}
-
-onChange={(e)=>setCoin(e.target.value)}
-
-className="w-full p-4 rounded-xl bg-[#0E223D]"
-
->
-
-<option>USDT</option>
-<option>BTC</option>
-<option>ETH</option>
-
-
-</select>
 
 
 
@@ -169,9 +162,10 @@ value={txHash}
 
 onChange={(e)=>setTxHash(e.target.value)}
 
-className="w-full p-4 rounded-xl bg-[#0E223D]"
+className="w-full p-4 rounded-xl bg-[#0E223D] text-white"
 
 />
+
 
 
 
@@ -192,7 +186,10 @@ className="w-full bg-[#D4AF37] text-black py-4 rounded-xl font-bold"
 
 
 
+
 </form>
+
+
 
 
 </div>

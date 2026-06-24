@@ -116,8 +116,11 @@ export default function Navbar() {
 
 
 <Link href="/">
-<h1 className="text-2xl font-bold">
-Vertex <span className="text-[#D4AF37]">Capital</span>
+<h1 className="text-2xl font-bold text-white cursor-pointer">
+  Vertex{" "}
+  <span className="text-[#D4AF37]">
+    Capital
+  </span>
 </h1>
 </Link>
 
