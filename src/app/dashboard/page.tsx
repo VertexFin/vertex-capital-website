@@ -6,292 +6,269 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 
-export default function DashboardPage() {
+export default function DashboardPage(){
 
-  const router = useRouter();
+const router = useRouter();
 
-  const [balance, setBalance] = useState(0);
-  const [deposits, setDeposits] = useState<any[]>([]);
-  const [plan, setPlan] = useState("No Plan");
-  const [loading, setLoading] = useState(true);
+const [balance,setBalance]=useState(0);
+const [deposits,setDeposits]=useState<any[]>([]);
+const [withdrawals,setWithdrawals]=useState<any[]>([]);
+const [plan,setPlan]=useState("No Plan");
+const [loading,setLoading]=useState(true);
 
 
 
-  useEffect(() => {
-    loadDashboard();
-  }, []);
+useEffect(()=>{
+loadDashboard();
+},[]);
 
 
 
-  const loadDashboard = async () => {
+const loadDashboard = async()=>{
 
-    const {
-      data: { session }
-    } = await supabase.auth.getSession();
 
+const {
+data:{session}
+}=await supabase.auth.getSession();
 
 
-    if (!session) {
-      router.push("/login");
-      return;
-    }
 
+if(!session){
+router.push("/login");
+return;
+}
 
 
-    const { data: profile } = await supabase
-      .from("profile")
-      .select("*")
-      .eq("id", session.user.id)
-      .single();
 
 
+const {data:profile}=await supabase
+.from("profile")
+.select("*")
+.eq("id",session.user.id)
+.single();
 
-    if (profile?.is_admin) {
-      router.push("/admin");
-      return;
-    }
 
 
 
-    setBalance(profile?.balance || 0);
-    setPlan(profile?.plan || "No Plan");
+if(profile?.is_admin){
 
+router.push("/admin");
+return;
 
+}
 
-    const { data } = await supabase
-      .from("deposits")
-      .select("*")
-      .eq("user_id", session.user.id)
-      .order("created_at", {
-        ascending: false
-      });
 
 
 
-    setDeposits(data || []);
+setBalance(profile?.balance || 0);
+setPlan(profile?.plan || "No Plan");
 
-    setLoading(false);
 
-  };
 
 
 
+const {data:depositData}=await supabase
+.from("deposits")
+.select("*")
+.eq("user_id",session.user.id);
 
-  if (loading) {
 
-    return (
-      <main className="pt-32 text-center">
-        Loading...
-      </main>
-    );
 
-  }
+setDeposits(depositData || []);
 
 
 
 
-  return (
 
-    <main className="pt-32 px-6 min-h-screen bg-[#071426] pb-32">
+const {data:withdrawData}=await supabase
+.from("withdrawals")
+.select("*")
+.eq("user_id",session.user.id);
 
 
 
-      <h1 className="text-4xl font-bold mb-8">
-        Investor Dashboard
-      </h1>
+setWithdrawals(withdrawData || []);
 
 
 
+setLoading(false);
 
 
-      <div className="bg-white/5 border border-white/10 p-8 rounded-3xl mb-8">
+};
 
 
-        <p className="text-gray-400">
-          Available Balance
-        </p>
 
 
-        <h2 className="text-5xl font-bold text-[#D4AF37] mt-3">
-          ${balance.toLocaleString()}
-        </h2>
 
+if(loading){
 
-      </div>
+return (
+<main className="pt-32 text-center text-white">
+Loading...
+</main>
+)
 
+}
 
 
 
+const totalDeposits =
+deposits
+.filter(x=>x.status==="approved")
+.reduce(
+(total,item)=>total+Number(item.amount),
+0
+);
 
-      <div className="bg-white/5 border border-white/10 p-8 rounded-3xl mb-10">
 
 
-        <h2 className="text-2xl font-bold mb-6">
-          My Investment
-        </h2>
+const totalWithdrawals =
+withdrawals
+.filter(x=>x.status==="approved")
+.reduce(
+(total,item)=>total+Number(item.amount),
+0
+);
 
 
 
-        <div className="grid md:grid-cols-3 gap-6">
 
+return (
 
-          <div>
+<main className="pt-32 px-6 min-h-screen bg-[#071426] pb-32">
 
-            <p className="text-gray-400">
-              Current Plan
-            </p>
 
-            <h3 className="text-xl font-bold">
-              {plan}
-            </h3>
 
-          </div>
+<h1 className="text-4xl font-bold text-white mb-10">
+Investor Dashboard
+</h1>
 
 
 
 
-          <div>
 
-            <p className="text-gray-400">
-              Expected ROI
-            </p>
+<div className="grid md:grid-cols-4 gap-6 mb-10">
 
-            <h3 className="text-xl font-bold text-[#D4AF37]">
-              10%
-            </h3>
 
-          </div>
 
+<div className="bg-white/5 border border-white/10 p-6 rounded-3xl">
 
+<p className="text-gray-400">
+Available Balance
+</p>
 
+<h2 className="text-3xl font-bold text-[#D4AF37]">
+${balance.toLocaleString()}
+</h2>
 
+</div>
 
-          <div>
 
-            <p className="text-gray-400">
-              Status
-            </p>
 
-            <h3 className="text-xl font-bold">
-              Active
-            </h3>
 
-          </div>
 
+<div className="bg-white/5 border border-white/10 p-6 rounded-3xl">
 
+<p className="text-gray-400">
+Total Deposits
+</p>
 
-        </div>
+<h2 className="text-3xl font-bold text-white">
+${totalDeposits.toLocaleString()}
+</h2>
 
+</div>
 
-      </div>
 
 
 
 
+<div className="bg-white/5 border border-white/10 p-6 rounded-3xl">
 
+<p className="text-gray-400">
+Withdrawals
+</p>
 
+<h2 className="text-3xl font-bold text-white">
+${totalWithdrawals.toLocaleString()}
+</h2>
 
-      <Link
-        href="/deposit"
-        className="inline-block bg-[#D4AF37] text-black px-6 py-3 rounded-xl font-bold mb-12"
-      >
-        Deposit Funds
-      </Link>
+</div>
 
 
 
 
 
+<div className="bg-white/5 border border-white/10 p-6 rounded-3xl">
 
-      <h2 className="text-2xl font-bold mb-6">
-        Deposit History
-      </h2>
+<p className="text-gray-400">
+Current Plan
+</p>
 
+<h2 className="text-2xl font-bold text-white">
+{plan}
+</h2>
 
+</div>
 
 
 
-      <div className="space-y-5">
 
+</div>
 
-        {
-          deposits.map((item) => (
 
 
-            <div
-              key={item.id}
-              className="bg-white/5 border border-white/10 p-6 rounded-2xl"
-            >
 
 
-              <p>
-                Amount:
-                <b>
-                  ${item.amount}
-                </b>
-              </p>
+<Link
+href="/deposit"
+className="inline-block bg-[#D4AF37] text-black px-6 py-3 rounded-xl font-bold"
+>
+Deposit BTC
+</Link>
 
 
 
-              <p>
-                Coin: {item.coin}
-              </p>
 
+<h2 className="text-2xl font-bold text-white mt-12 mb-6">
+Deposit History
+</h2>
 
 
 
-              <p>
-                Status:
+<div className="space-y-4">
 
-                <span className="text-[#D4AF37] ml-2">
-                  {item.status}
-                </span>
+{deposits.map((item)=>(
 
-              </p>
+<div
+key={item.id}
+className="bg-white/5 border border-white/10 p-5 rounded-xl"
+>
 
+<p className="text-white">
+${item.amount}
+</p>
 
+<p className="text-gray-400">
+{item.coin}
+</p>
 
+<p className="text-[#D4AF37]">
+{item.status}
+</p>
 
-              <p className="text-gray-500 text-sm mt-2">
 
-                {new Date(
-                  item.created_at
-                ).toLocaleString()}
+</div>
 
-              </p>
+))}
 
 
+</div>
 
 
-            </div>
 
+</main>
 
-          ))
-        }
-
-
-
-
-
-        {
-          deposits.length === 0 && (
-
-            <p className="text-gray-400">
-              No deposits yet.
-            </p>
-
-          )
-        }
-
-
-
-      </div>
-
-
-
-
-    </main>
-
-  );
+)
 
 }

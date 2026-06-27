@@ -5,214 +5,173 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+
 export default function AdminPage() {
 
-  const router = useRouter();
+const router = useRouter();
 
-  const [users, setUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+const [users,setUsers]=useState<any[]>([]);
+const [deposits,setDeposits]=useState<any[]>([]);
+const [loading,setLoading]=useState(true);
 
 
-  useEffect(() => {
-    checkAdmin();
-  }, []);
 
+useEffect(()=>{
+checkAdmin();
+},[]);
 
 
-  const checkAdmin = async () => {
 
-    const {
-      data:{session}
-    } = await supabase.auth.getSession();
+const checkAdmin = async()=>{
 
 
-    if(!session){
-      router.push("/login");
-      return;
-    }
+const {
+data:{session}
+}=await supabase.auth.getSession();
 
 
 
-    const {data:profile} = await supabase
-      .from("profile")
-      .select("is_admin")
-      .eq("id", session.user.id)
-      .single();
+if(!session){
 
+router.push("/login");
+return;
 
+}
 
-    if(!profile?.is_admin){
 
-      router.push("/dashboard");
-      return;
 
-    }
 
+const {data:profile}=await supabase
+.from("profile")
+.select("is_admin")
+.eq("id",session.user.id)
+.single();
 
-    loadUsers();
 
-  };
 
+if(!profile?.is_admin){
 
+router.push("/dashboard");
+return;
 
+}
 
 
-  const loadUsers = async () => {
 
-    const {data} = await supabase
-      .from("profile")
-      .select("*")
-      .order("created_at",{ascending:false});
+loadData();
 
+};
 
-    setUsers(data || []);
 
-    setLoading(false);
 
-  };
 
 
+const loadData = async()=>{
 
 
+const {data:userData}=await supabase
+.from("profile")
+.select("*");
 
 
-  const updateBalance = async(
-    id:string,
-    value:number
-  )=>{
 
+const {data:depositData}=await supabase
+.from("deposits")
+.select("*");
 
-    await supabase
-      .from("profile")
-      .update({
-        balance:value
-      })
-      .eq("id",id);
 
 
+setUsers(userData || []);
+setDeposits(depositData || []);
 
-    loadUsers();
+setLoading(false);
 
-  };
 
+};
 
 
 
 
 
-  const handleLogout = async()=>{
+const updateBalance = async(
+id:string,
+value:number
+)=>{
 
-    await supabase.auth.signOut();
 
-    router.push("/login");
+await supabase
+.from("profile")
+.update({
+balance:value
+})
+.eq("id",id);
 
-  };
 
+loadData();
 
+};
 
 
 
-  if(loading){
 
-    return (
-      <main className="pt-32 text-center">
-        Loading admin...
-      </main>
-    );
 
-  }
+const logout = async()=>{
 
+await supabase.auth.signOut();
 
+router.push("/login");
 
+};
 
 
 
-  return (
 
-<main className="pt-32 px-6 min-h-screen bg-[#071426]">
 
+if(loading){
 
-<div className="flex flex-col md:flex-row md:justify-between gap-6 mb-10">
+return (
+<main className="pt-32 text-white text-center">
+Loading Admin...
+</main>
+)
 
+}
 
-<div>
 
-<h1 className="text-4xl font-bold">
+
+
+
+const pendingDeposits =
+deposits.filter(
+(item)=>item.status==="pending"
+).length;
+
+
+
+
+return (
+
+<main className="pt-32 px-6 min-h-screen bg-[#071426] pb-20">
+
+
+
+<div className="flex justify-between items-center mb-10">
+
+
+<h1 className="text-4xl font-bold text-white">
 Admin Dashboard
 </h1>
-
-<p className="text-gray-400 mt-2">
-Manage users, balances and deposits.
-</p>
-
-<div className="grid md:grid-cols-3 gap-6 mt-8 mb-10">
-
-<div className="bg-white/5 p-6 rounded-2xl">
-<p className="text-gray-400">
-Users
-</p>
-
-<h2 className="text-4xl font-bold">
-{users.length}
-</h2>
-</div>
-
-
-<div className="bg-white/5 p-6 rounded-2xl">
-<p className="text-gray-400">
-Admins
-</p>
-
-<h2 className="text-4xl font-bold">
-1
-</h2>
-</div>
-
-
-
-<div className="bg-white/5 p-6 rounded-2xl">
-
-<p className="text-gray-400">
-System
-</p>
-
-<h2 className="text-4xl font-bold text-[#D4AF37]">
-Active
-</h2>
-
-</div>
-
-
-</div>
-
-</div>
-
-
-
-
-
-<div className="flex gap-4">
-
-
-<Link
-href="/admin/deposits"
-className="bg-[#D4AF37] text-black px-4 py-2 rounded-xl text-sm font-semibold w-auto"
->
-Manage Deposits
-</Link>
 
 
 
 <button
-onClick={handleLogout}
-className="border border-white/20 px-4 py-2 rounded-xl text-sm w-auto"
+onClick={logout}
+className="border border-red-400 text-red-400 px-5 py-2 rounded-xl"
 >
 Logout
 </button>
 
 
-</div>
-
 
 </div>
 
@@ -221,11 +180,96 @@ Logout
 
 
 
-<div className="grid gap-6">
+<div className="grid md:grid-cols-3 gap-6 mb-10">
 
 
-{
-users.map((user)=>(
+
+<div className="bg-white/5 p-6 rounded-3xl border border-white/10">
+
+<p className="text-gray-400">
+Total Users
+</p>
+
+<h2 className="text-4xl text-white font-bold">
+{users.length}
+</h2>
+
+</div>
+
+
+
+
+
+<div className="bg-white/5 p-6 rounded-3xl border border-white/10">
+
+<p className="text-gray-400">
+Total Deposits
+</p>
+
+<h2 className="text-4xl text-[#D4AF37] font-bold">
+${deposits.reduce((a,b)=>a+Number(b.amount),0)}
+</h2>
+
+</div>
+
+
+
+
+
+<div className="bg-white/5 p-6 rounded-3xl border border-white/10">
+
+<p className="text-gray-400">
+Pending Deposits
+</p>
+
+<h2 className="text-4xl text-white font-bold">
+{pendingDeposits}
+</h2>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<div className="flex gap-4 mb-10">
+
+
+<Link
+href="/admin/deposits"
+className="bg-[#D4AF37] text-black px-6 py-3 rounded-xl font-bold"
+>
+Manage Deposits
+</Link>
+
+
+<Link
+href="/admin/withdrawals"
+className="border border-white/20 text-white px-6 py-3 rounded-xl"
+>
+Withdrawals
+</Link>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div className="space-y-5">
+
+
+{users.map((user)=>(
 
 
 <div
@@ -234,8 +278,8 @@ className="bg-white/5 border border-white/10 p-6 rounded-2xl"
 >
 
 
-<h2 className="text-xl font-bold">
-{user.full_name || "No Name"}
+<h2 className="text-xl text-white font-bold">
+{user.full_name || "User"}
 </h2>
 
 
@@ -247,13 +291,9 @@ className="bg-white/5 border border-white/10 p-6 rounded-2xl"
 
 
 
-<p className="mt-4">
+<p className="mt-3 text-white">
 Balance:
-
-<span className="text-[#D4AF37] font-bold">
- ${user.balance || 0}
-</span>
-
+${user.balance || 0}
 </p>
 
 
@@ -261,47 +301,39 @@ Balance:
 
 
 <input
+
 type="number"
-placeholder="New balance"
+
+placeholder="Add new balance"
+
 onBlur={(e)=>
- updateBalance(
- user.id,
- Number(e.target.value)
- )
-}
-className="mt-4 w-full bg-[#0E223D] p-3 rounded-xl"
-/>
-
-
-
-
-
-{
-user.is_admin && (
-
-<p className="mt-3 text-[#D4AF37]">
-ADMIN ACCOUNT
-</p>
-
+updateBalance(
+user.id,
+Number(e.target.value)
 )
-
 }
+
+className="mt-4 w-full bg-[#0E223D] p-3 rounded-xl text-white"
+
+ />
 
 
 
 </div>
 
 
-))
+))}
 
-}
 
 
 </div>
+
+
+
 
 
 </main>
 
-  );
+)
 
 }
