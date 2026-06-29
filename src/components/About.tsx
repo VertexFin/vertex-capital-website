@@ -116,7 +116,7 @@ export default function About() {
 
   <div className="grid md:grid-cols-3 gap-6 mt-12">
 
-    <div className="bg-white/5 p-6 rounded-2xl">
+    <div className="bg-white/5 p-6 rounded-2xl text-white">
       <p>
         Vertex Capital has helped me build a disciplined investment strategy.
       </p>
@@ -125,7 +125,7 @@ export default function About() {
       </h4>
     </div>
 
-    <div className="bg-white/5 p-6 rounded-2xl">
+    <div className="bg-white/5 p-6 rounded-2xl text-white">
       <p>
         Professional service and transparent investment opportunities.
       </p>
@@ -134,7 +134,7 @@ export default function About() {
       </h4>
     </div>
 
-    <div className="bg-white/5 p-6 rounded-2xl">
+    <div className="bg-white/5 p-6 rounded-2xl text-white">
       <p>
         One of the best investment experiences I've had.
       </p>

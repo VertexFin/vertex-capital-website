@@ -24,7 +24,7 @@ export default function Footer() {
 
           <div>
 
-            <h3 className="font-bold mb-4">
+            <h3 className="font-bold mb-4 text-white">
               Company
             </h3>
 
@@ -41,7 +41,7 @@ export default function Footer() {
 
           <div>
 
-            <h3 className="font-bold mb-4">
+            <h3 className="font-bold mb-4 text-white">
               Legal
             </h3>
 
@@ -65,7 +65,7 @@ export default function Footer() {
 
           <div>
 
-            <h3 className="font-bold mb-4">
+            <h3 className="font-bold mb-4 text-white">
               Contact
             </h3>
 

@@ -55,7 +55,7 @@ export default function HowItWorks() {
                 {step.title}
               </h4>
 
-              <p className="text-gray-400 mt-4 leading-7">
+              <p className="text-gray-400 mt-4 leading-7 text-white">
                 {step.description}
               </p>
             </div>

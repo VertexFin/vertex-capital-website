@@ -224,7 +224,7 @@ Current Plan
 href="/deposit"
 className="inline-block bg-[#D4AF37] text-black px-6 py-3 rounded-xl font-bold"
 >
-Deposit BTC
+Deposit Funds
 </Link>
 
 
