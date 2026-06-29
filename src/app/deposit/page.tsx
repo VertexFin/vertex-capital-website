@@ -1,114 +1,200 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
+import {useEffect,useState} from "react";
+import {supabase} from "@/lib/supabase";
+import {useRouter} from "next/navigation";
 
-export default function DepositPage() {
-  const router = useRouter();
 
-  const [amount, setAmount] = useState("");
-  const [txHash, setTxHash] = useState("");
-  const [wallet, setWallet] = useState("");
-  const [loading, setLoading] = useState(false);
+export default function DepositPage(){
 
-  useEffect(() => {
-    loadWallet();
-  }, []);
+const router=useRouter();
 
-  const loadWallet = async () => {
-    const { data } = await supabase
-      .from("wallet_settings")
-      .select("btc_wallet")
-      .limit(1)
-      .single();
 
-    if (data) {
-      setWallet(data.btc_wallet);
-    }
-  };
+const [coin,setCoin]=useState("BTC");
+const [wallet,setWallet]=useState("");
 
-  const submitDeposit = async (e: any) => {
-    e.preventDefault();
+const [amount,setAmount]=useState("");
+const [txHash,setTxHash]=useState("");
+const [loading,setLoading]=useState(false);
 
-    setLoading(true);
 
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+const [wallets,setWallets]=useState<any>({});
 
-    if (!session) {
-      router.push("/login");
-      return;
-    }
 
-    const { error } = await supabase.from("deposits").insert({
-      user_id: session.user.id,
-      amount: Number(amount),
-      coin: "BTC",
-      tx_hash: txHash,
-      status: "pending",
-    });
 
-    if (error) {
-      alert(error.message);
-    } else {
-      alert("Deposit submitted. Awaiting approval.");
-      router.push("/dashboard");
-    }
+useEffect(()=>{
 
-    setLoading(false);
-  };
+loadWallets();
 
-  return (
-    <main className="pt-32 px-6 min-h-screen bg-[#071426]">
-      <div className="max-w-xl mx-auto bg-white/5 border border-white/10 rounded-3xl p-8">
-        <h1 className="text-4xl font-bold text-white mb-8">
-          Deposit Bitcoin
-        </h1>
+},[]);
 
-        <div className="bg-[#0E223D] p-6 rounded-2xl mb-8">
-          <h3 className="text-xl font-bold text-white mb-4">
-            Bitcoin Deposit Address
-          </h3>
 
-          <p className="text-[#D4AF37] break-all font-medium">
-            {wallet || "Loading wallet..."}
-          </p>
 
-          <p className="text-gray-400 mt-3 text-sm">
-            Send only Bitcoin (BTC) to this address.
-            <br />
-            After sending your payment, enter the transaction hash below.
-          </p>
-        </div>
+useEffect(()=>{
 
-        <form onSubmit={submitDeposit} className="space-y-5">
-          <input
-            type="number"
-            placeholder="Amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="w-full p-4 rounded-xl bg-[#0E223D] text-white"
-            required
-          />
+if(wallets){
 
-          <input
-            placeholder="Transaction Hash"
-            value={txHash}
-            onChange={(e) => setTxHash(e.target.value)}
-            className="w-full p-4 rounded-xl bg-[#0E223D] text-white"
-            required
-          />
+setWallet(wallets[coin.toLowerCase()+"_wallet"] || "");
 
-          <button
-            disabled={loading}
-            className="w-full bg-[#D4AF37] text-black py-4 rounded-xl font-bold"
-          >
-            {loading ? "Submitting..." : "Submit Deposit"}
-          </button>
-        </form>
-      </div>
-    </main>
-  );
+}
+
+},[coin,wallets]);
+
+
+
+
+const loadWallets=async()=>{
+
+const {data}=await supabase
+.from("wallet_settings")
+.select("*")
+.limit(1)
+.single();
+
+
+setWallets(data || {});
+
+};
+
+
+
+
+
+const submitDeposit=async(e:any)=>{
+
+e.preventDefault();
+
+setLoading(true);
+
+
+const {
+data:{session}
+}=await supabase.auth.getSession();
+
+
+
+if(!session){
+router.push("/login");
+return;
+}
+
+
+
+const {error}=await supabase
+.from("deposits")
+.insert({
+
+user_id:session.user.id,
+amount:Number(amount),
+coin,
+tx_hash:txHash,
+status:"pending"
+
+});
+
+
+
+if(error){
+
+alert(error.message);
+
+}else{
+
+alert("Deposit submitted");
+
+router.push("/dashboard");
+
+}
+
+
+setLoading(false);
+
+};
+
+
+
+
+return (
+
+<main className="pt-32 px-6 min-h-screen bg-[#071426]">
+
+
+<div className="max-w-xl mx-auto bg-white/5 p-8 rounded-3xl">
+
+
+<h1 className="text-4xl text-white font-bold mb-8">
+Deposit Funds
+</h1>
+
+
+
+<select
+value={coin}
+onChange={(e)=>setCoin(e.target.value)}
+className="w-full p-4 bg-[#0E223D] text-white rounded-xl mb-5"
+>
+
+<option>BTC</option>
+<option>ETH</option>
+<option>USDT</option>
+<option>LTC</option>
+
+</select>
+
+
+
+
+<div className="bg-[#0E223D] p-5 rounded-xl mb-5">
+
+<p className="text-gray-400">
+{coin} Wallet
+</p>
+
+<p className="text-[#D4AF37] break-all">
+{wallet || "Wallet not set"}
+</p>
+
+</div>
+
+
+
+
+<input
+placeholder="Amount"
+type="number"
+value={amount}
+onChange={(e)=>setAmount(e.target.value)}
+className="w-full p-4 mb-5 bg-[#0E223D] text-white rounded-xl"
+/>
+
+
+
+<input
+placeholder="Transaction Hash"
+value={txHash}
+onChange={(e)=>setTxHash(e.target.value)}
+className="w-full p-4 mb-5 bg-[#0E223D] text-white rounded-xl"
+/>
+
+
+
+
+<button
+disabled={loading}
+onClick={submitDeposit}
+className="w-full bg-[#D4AF37] text-black py-4 rounded-xl font-bold"
+>
+
+{loading ? "Submitting..." : "Submit Deposit"}
+
+</button>
+
+
+
+</div>
+
+</main>
+
+)
+
 }
