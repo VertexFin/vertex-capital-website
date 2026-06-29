@@ -237,7 +237,7 @@ Pending Deposits
 
 
 
-<div className="flex gap-4 mb-10">
+<div className="flex flex-wrap gap-4 mb-10">
 
 
 <Link
@@ -253,6 +253,13 @@ href="/admin/withdrawals"
 className="border border-white/20 text-white px-6 py-3 rounded-xl"
 >
 Withdrawals
+</Link>
+
+<Link
+href="/admin/settings"
+className="border border-white/20 text-white px-6 py-3 rounded-xl"
+>
+Settings
 </Link>
 
 

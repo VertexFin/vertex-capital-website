@@ -127,7 +127,7 @@ export default function RegisterPage() {
 
         <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
 
-          <h1 className="text-4xl font-bold mb-2">
+          <h1 className="text-4xl font-bold text-white mb-2">
             Create Account
           </h1>
 
@@ -147,7 +147,7 @@ export default function RegisterPage() {
               onChange={(e) =>
                 setFullName(e.target.value)
               }
-              className="w-full p-4 rounded-xl bg-[#0E223D]"
+              className="w-full p-4 rounded-xl bg-[#0E223D] text-white placeholder:text-gray-500 border border-white/10 focus:border-[#D4AF37] outline-none"
             />
 
             <input
@@ -157,7 +157,7 @@ export default function RegisterPage() {
               onChange={(e) =>
                 setUsername(e.target.value)
               }
-              className="w-full p-4 rounded-xl bg-[#0E223D]"
+              className="w-full p-4 rounded-xl bg-[#0E223D] text-white placeholder:text-gray-500 border border-white/10 focus:border-[#D4AF37] outline-none"
             />
 
             <input
@@ -167,7 +167,7 @@ export default function RegisterPage() {
               onChange={(e) =>
                 setEmail(e.target.value)
               }
-              className="w-full p-4 rounded-xl bg-[#0E223D]"
+              className="w-full p-4 rounded-xl bg-[#0E223D] text-white placeholder:text-gray-500 border border-white/10 focus:border-[#D4AF37] outline-none"
             />
 
             <div className="relative">
@@ -184,7 +184,7 @@ export default function RegisterPage() {
                     e.target.value
                   )
                 }
-                className="w-full p-4 rounded-xl bg-[#0E223D]"
+              className="w-full p-4 rounded-xl bg-[#0E223D] text-white placeholder:text-gray-500 border border-white/10 focus:border-[#D4AF37] outline-none"
               />
 
               <button
@@ -194,7 +194,7 @@ export default function RegisterPage() {
                     !showPassword
                   )
                 }
-                className="absolute right-4 top-1/2 -translate-y-1/2"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300"
               >
                 {showPassword ? (
                   <FiEyeOff />
@@ -218,7 +218,7 @@ export default function RegisterPage() {
                     e.target.value
                   )
                 }
-                className="w-full p-4 rounded-xl bg-[#0E223D]"
+                className="w-full p-4 rounded-xl bg-[#0E223D] text-white placeholder:text-gray-500 border border-white/10 focus:border-[#D4AF37] outline-none"
               />
 
               <button
@@ -228,7 +228,7 @@ export default function RegisterPage() {
                     !showConfirmPassword
                   )
                 }
-                className="absolute right-4 top-1/2 -translate-y-1/2"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300"
               >
                 {showConfirmPassword ? (
                   <FiEyeOff />
@@ -240,7 +240,7 @@ export default function RegisterPage() {
 
             <hr className="border-white/10" />
 
-            <h3 className="font-bold text-xl">
+            <h3 className="font-bold text-white text-xl">
               Wallet Information
             </h3>
 
@@ -253,7 +253,7 @@ export default function RegisterPage() {
                   e.target.value
                 )
               }
-              className="w-full p-4 rounded-xl bg-[#0E223D]"
+              className="w-full p-4 rounded-xl bg-[#0E223D] text-white placeholder:text-gray-500 border border-white/10 focus:border-[#D4AF37] outline-none"
             />
 
             <input
@@ -265,7 +265,7 @@ export default function RegisterPage() {
                   e.target.value
                 )
               }
-              className="w-full p-4 rounded-xl bg-[#0E223D]"
+              className="w-full p-4 rounded-xl bg-[#0E223D] text-white placeholder:text-gray-500 border border-white/10 focus:border-[#D4AF37] outline-none"
             />
 
             <input
@@ -277,7 +277,7 @@ export default function RegisterPage() {
                   e.target.value
                 )
               }
-              className="w-full p-4 rounded-xl bg-[#0E223D]"
+              className="w-full p-4 rounded-xl bg-[#0E223D] text-white placeholder:text-gray-500 border border-white/10 focus:border-[#D4AF37] outline-none"
             />
 
             <input
@@ -289,7 +289,7 @@ export default function RegisterPage() {
                   e.target.value
                 )
               }
-              className="w-full p-4 rounded-xl bg-[#0E223D]"
+              className="w-full p-4 rounded-xl bg-[#0E223D] text-white placeholder:text-gray-500 border border-white/10 focus:border-[#D4AF37] outline-none"
             />
 
             <div className="flex items-start gap-3">
