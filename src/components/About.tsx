@@ -25,7 +25,7 @@ export default function About() {
               About Vertex Capital
             </span>
 
-            <h2 className="text-4xl md:text-5xl font-bold mt-4">
+            <h2 className="text-4xl md:text-5xl font-bold mt-4 text-white">
               Helping Investors Build Sustainable Wealth
             </h2>
 

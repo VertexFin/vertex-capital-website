@@ -142,7 +142,7 @@ export default function InvestmentCalculator() {
 
       <section className="py-24 bg-[#0E223D] mt-24">
         <div className="max-w-5xl mx-auto text-center px-6">
-          <h2 className="text-5xl font-bold">
+          <h2 className="text-5xl font-bold text-white">
             Start Building Wealth Today
           </h2>
 

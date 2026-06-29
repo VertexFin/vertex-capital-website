@@ -51,7 +51,7 @@ export default function HowItWorks() {
                 {step.number}
               </h3>
 
-              <h4 className="text-2xl font-semibold mt-6">
+              <h4 className="text-2xl font-semibold mt-6 text-white">
                 {step.title}
               </h4>
 
