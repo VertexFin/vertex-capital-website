@@ -97,7 +97,7 @@ export default function FAQ() {
       <div className="max-w-4xl mx-auto px-6">
 
        <div>
-  <h2 className="text-4xl font-bold">
+  <h2 className="text-4xl font-bold text-white">
     Frequently Asked Questions
   </h2>
 </div>
@@ -112,7 +112,7 @@ export default function FAQ() {
                 onClick={() =>
                   setOpen(open === index ? null : index)
                 }
-                className="w-full text-left p-6 font-semibold"
+                className="w-full text-left p-6 font-semibold text-white"
               >
                 {faq.question}
               </button>
