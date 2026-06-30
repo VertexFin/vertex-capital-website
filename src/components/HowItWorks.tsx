@@ -22,7 +22,7 @@ export default function HowItWorks() {
       number: "04",
       title: "Grow Your Wealth",
       description:
-        "Track performance and earn returns over your selected tenure.",
+        "Track your investment performance and receive returns throughout your investment period.",
     },
   ];
 
@@ -45,23 +45,24 @@ export default function HowItWorks() {
           {steps.map((step) => (
             <div
               key={step.number}
-              className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-[#D4AF37] transition"
+              className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-[#D4AF37] hover:-translate-y-1 transition-all duration-300"
             >
               <h3 className="text-5xl font-bold text-[#D4AF37]">
                 {step.number}
               </h3>
 
-              <h4 className="text-2xl font-semibold mt-6 text-white">
+              <h4 className="text-2xl font-semibold text-white mt-6">
                 {step.title}
               </h4>
 
-              <p className="text-gray-400 mt-4 leading-7 text-white">
+              <p className="mt-4 text-base leading-7 text-gray-300">
                 {step.description}
               </p>
             </div>
           ))}
 
         </div>
+
       </div>
     </section>
   );
