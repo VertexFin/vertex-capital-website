@@ -112,7 +112,7 @@ export default function LoginPage() {
         <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
 
 
-          <h1 className="text-4xl font-bold mb-2">
+          <h1 className="text-4xl font-bold mb-2 text-white">
             Login
           </h1>
 
@@ -141,7 +141,7 @@ export default function LoginPage() {
                 setEmail(e.target.value)
               }
 
-              className="w-full p-4 rounded-xl bg-[#0E223D]"
+              className="w-full p-4 rounded-xl bg-[#0E223D] text-white"
 
               required
 
@@ -161,7 +161,7 @@ export default function LoginPage() {
                 setPassword(e.target.value)
               }
 
-              className="w-full p-4 rounded-xl bg-[#0E223D]"
+              className="w-full p-4 rounded-xl bg-[#0E223D] text-white"
 
               required
 

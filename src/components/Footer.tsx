@@ -10,7 +10,7 @@ export default function Footer() {
 
           <div>
 
-            <h2 className="text-2xl font-bold">
+            <h2 className="text-2xl font-bold text-white">
               Vertex
               <span className="text-[#D4AF37]"> Capital</span>
             </h2>
