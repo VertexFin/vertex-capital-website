@@ -227,7 +227,11 @@ className="inline-block bg-[#D4AF37] text-black px-6 py-3 rounded-xl font-bold"
 Deposit Funds
 </Link>
 
-
+<Link href="/withdraw"
+className="inline-block bg-[#D4AF37] text-black px-6 py-3 pl-4 rounded-xl font-bold"
+>
+Withdraw
+</Link>
 
 
 <h2 className="text-2xl font-bold text-white mt-12 mb-6">

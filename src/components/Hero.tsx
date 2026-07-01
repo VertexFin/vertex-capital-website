@@ -71,7 +71,7 @@ export default function Hero() {
                     Portfolio Value
                   </p>
                   <h3 className="text-3xl font-bold text-white">
-                    $2.4M
+                    $6.4M
                   </h3>
                 </div>
 
@@ -98,7 +98,7 @@ export default function Hero() {
                     Active Plans
                   </p>
                   <h3 className="text-3xl font-bold text-white">
-                    8
+                    12,000+
                   </h3>
                 </div>
 
