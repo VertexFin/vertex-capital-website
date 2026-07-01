@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-[#071426] text-white min-h-screen">
+      <body className="relative bg-[#071426] text-white min-h-screen">
 
         <Navbar />
 
