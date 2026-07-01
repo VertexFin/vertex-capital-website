@@ -27,7 +27,9 @@ export default function RootLayout({
         </main>
 
         <Footer />
-        <ChatWidget />
+        <div className="fixed bottom-10 right-10 z-[999999] bg-red-500 p-5 text-white">
+TEST LAYOUT
+</div>
 
         <Toaster position="top-right" />
       
