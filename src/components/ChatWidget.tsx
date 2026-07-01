@@ -104,10 +104,6 @@ return (
 
 <>
 
-<div className="fixed top-24 left-5 z-[9999999] bg-red-500 text-white p-3">
-CHAT WORKING
-</div>
-
 {!open && (
 
 <button
