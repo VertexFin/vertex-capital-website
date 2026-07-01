@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import ChatWidget from "@/components/ChatWidget";
 
 export const metadata: Metadata = {
   title: "Vertex Capital Finance Ltd",
@@ -26,9 +27,10 @@ export default function RootLayout({
         </main>
 
         <Footer />
+        <ChatWidget />
 
         <Toaster position="top-right" />
-
+      
       </body>
     </html>
   );

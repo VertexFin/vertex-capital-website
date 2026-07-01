@@ -191,6 +191,58 @@ const deleteUser = async (id: string) => {
 
     </div>
 
+    <div className="grid md:grid-cols-3 gap-6 mb-10">
+
+  <div className="bg-yellow-500/10 border border-yellow-500 rounded-2xl p-6">
+
+    <p className="text-yellow-400 text-sm uppercase">
+      Pending Deposits
+    </p>
+
+    <h2 className="text-4xl font-bold text-white mt-2">
+      {pendingDeposits}
+    </h2>
+
+    <p className="text-gray-400 mt-3">
+      Awaiting approval
+    </p>
+
+  </div>
+
+  <div className="bg-red-500/10 border border-red-500 rounded-2xl p-6">
+
+    <p className="text-red-400 text-sm uppercase">
+      Pending Withdrawals
+    </p>
+
+    <h2 className="text-4xl font-bold text-white mt-2">
+      {pendingWithdrawals}
+    </h2>
+
+    <p className="text-gray-400 mt-3">
+      Awaiting approval
+    </p>
+
+  </div>
+
+  <div className="bg-green-500/10 border border-green-500 rounded-2xl p-6">
+
+    <p className="text-green-400 text-sm uppercase">
+      Active Investors
+    </p>
+
+    <h2 className="text-4xl font-bold text-white mt-2">
+      {users.length}
+    </h2>
+
+    <p className="text-gray-400 mt-3">
+      Registered accounts
+    </p>
+
+  </div>
+
+</div>
+
     {/* Dashboard Statistics */}
 
     <div className="grid md:grid-cols-2 1g:grid-cols-3 gap-6 mb-10">
