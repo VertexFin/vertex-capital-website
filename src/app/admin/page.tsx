@@ -13,10 +13,25 @@ export default function AdminPage() {
   const [withdrawals, setWithdrawals] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [unreadMessages, setUnreadMessages] = useState(0);
 
   useEffect(() => {
-    checkAdmin();
-  }, []);
+
+  let mounted = true;
+
+  const init = async () => {
+    if (mounted) {
+      await checkAdmin();
+    }
+  };
+
+  init();
+
+  return () => {
+    mounted = false;
+  };
+
+}, []);
 
   const checkAdmin = async () => {
     const {
@@ -40,7 +55,50 @@ export default function AdminPage() {
     }
 
     loadData();
+    loadUnreadMessages();
+   subscribeToMessages(); 
+
   };
+
+  const loadUnreadMessages = async () => {
+
+  const { data } = await supabase
+    .from("chat_messages")
+    .select("id")
+    .eq("sender", "user")
+    .eq("is_read", false);
+
+  setUnreadMessages(data?.length || 0);
+
+};
+
+ let channel: any;
+
+const subscribeToMessages = () => {
+
+  if (channel) {
+    supabase.removeChannel(channel);
+  }
+
+  channel = supabase.channel(
+    "admin-chat-" + Date.now()
+  );
+
+  channel.on(
+    "postgres_changes",
+    {
+      event: "INSERT",
+      schema: "public",
+      table: "chat_messages",
+    },
+    () => {
+      loadUnreadMessages();
+    }
+  );
+
+  channel.subscribe();
+};
+
 
   const loadData = async () => {
     const { data: userData } = await supabase
@@ -303,6 +361,28 @@ const deleteUser = async (id: string) => {
       </Link>
 
       <Link
+  href="/admin/messages"
+  className="bg-[#D4AF37] text-black px-6 py-3 rounded-xl font-bold"
+>
+  <div className="flex items-center gap-2">
+
+  Messages
+
+  {unreadMessages > 0 && (
+
+    <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1">
+
+      {unreadMessages}
+
+    </span>
+
+  )}
+
+</div>
+</Link>
+
+
+      <Link
         href="/admin/withdrawals"
         className="border border-white/20 px-6 py-3 rounded-xl text-white"
       >
@@ -316,6 +396,7 @@ const deleteUser = async (id: string) => {
         Deposit Funds
       </Link>
 
+      
       <Link
         href="/admin/settings"
         className="border border-white/20 px-6 py-3 rounded-xl text-white"

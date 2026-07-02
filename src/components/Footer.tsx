@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 
 export default function Footer() {
@@ -71,13 +72,20 @@ export default function Footer() {
 
             <div className="text-gray-400 space-y-3">
 
-              <p>
-                supportvertexcapital@gmail.com
-              </p>
+             <h3 className="text-white font-bold mb-4">
+Live Support
+</h3>
 
-              <p>
-                +1 (618) 739 8187
-              </p>
+<p className="text-gray-400">
+Need help with your investment?
+</p>
+
+<Link
+  href="/support"
+  className="inline-block mt-5 bg-[#D4AF37] text-black px-5 py-3 rounded-xl font-bold"
+>
+  Chat With An Advisor
+</Link>
 
               <p>
                 Address: Mark Richards, 18 Haast Close, Kelson, Lower Hutt, 5010 , New Zealand.
