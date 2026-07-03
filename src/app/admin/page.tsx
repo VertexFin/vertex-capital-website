@@ -189,6 +189,24 @@ const deleteUser = async (id: string) => {
   loadData();
 };
 
+async function approveWithdrawal(id: string) {
+  await supabase
+    .from("withdrawals")
+    .update({ status: "Approved" })
+    .eq("id", id);
+
+  loadData();
+}
+
+async function rejectWithdrawal(id: string) {
+  await supabase
+    .from("withdrawals")
+    .update({ status: "Rejected" })
+    .eq("id", id);
+
+  loadData();
+}
+
   const logout = async () => {
     await supabase.auth.signOut();
     router.push("/login");
@@ -678,19 +696,37 @@ const deleteUser = async (id: string) => {
 
             <td className="p-4">
 
-              <span
-                className={`px-3 py-1 rounded-full text-sm ${
-                  withdrawal.status === "approved"
-                    ? "bg-green-600"
-                    : withdrawal.status === "pending"
-                    ? "bg-yellow-600"
-                    : "bg-red-600"
-                }`}
-              >
-                {withdrawal.status}
-              </span>
+              <p
+  className={`font-bold ${
+    withdrawal.status === "Approved"
+      ? "text-green-400"
+      : withdrawal.status === "Rejected"
+      ? "text-red-400"
+      : "text-yellow-400"
+  }`}
+>
+  {withdrawal.status}
+</p>
 
             </td>
+
+            <td>
+  <div className="flex gap-3">
+    <button
+      onClick={() => approveWithdrawal(withdrawal.id)}
+      className="bg-green-600 px-3 py-2 rounded text-white"
+    >
+      Approve
+    </button>
+
+    <button
+      onClick={() => rejectWithdrawal(withdrawal.id)}
+      className="bg-red-600 px-3 py-2 rounded text-white"
+    >
+      Reject
+    </button>
+  </div>
+</td>
 
           </tr>
 

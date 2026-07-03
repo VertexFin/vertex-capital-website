@@ -63,48 +63,75 @@ openChat
   }, []);
 
   async function initializeChat() {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-    if (!session) return;
-
-    const { data: existing } = await supabase
-      .from("chat_conversations")
-      .select("*")
-      .eq("user_id", session.user.id)
-      .maybeSingle();
-
-    let conversation =
-      existing?.id || "";
-
-    if (!conversation) {
-      const { data } = await supabase
-        .from("chat_conversations")
-        .insert({
-          user_id: session.user.id,
-        })
-        .select()
-        .single();
-
-      conversation = data.id;
-
-      await supabase
-        .from("chat_messages")
-        .insert({
-          conversation_id: conversation,
-          sender: "system",
-          message:
-            "👋 Welcome to Vertex Capital Finance. Thank you for contacting us. One of our investment advisors will reply shortly. Kindly tell us how we can help you.",
-        });
-    }
-
-    setConversationId(conversation);
-
-    loadMessages(conversation);
-
-    subscribe(conversation);
+  // If user is not logged in, just show a local welcome message
+  if (!session) {
+    setMessages([
+      {
+        id: "welcome",
+        sender: "system",
+        message:
+          "👋 Welcome to Vertex Capital Finance.\n\nHow can we help you today?\n\nOne of our investment advisors will reply shortly after you send your message.",
+      },
+    ]);
+    return;
   }
+
+  const { data: existing } = await supabase
+    .from("chat_conversations")
+    .select("*")
+    .eq("user_id", session.user.id)
+    .maybeSingle();
+
+  let conversationId = existing?.id;
+
+  if (!conversationId) {
+    const { data: conversation } = await supabase
+      .from("chat_conversations")
+      .insert({
+        user_id: session.user.id,
+      })
+      .select()
+      .single();
+
+    conversationId = conversation.id;
+  }
+
+  setConversationId(conversationId);
+
+  // Load previous messages
+  const { data } = await supabase
+    .from("chat_messages")
+    .select("*")
+    .eq("conversation_id", conversationId)
+    .order("created_at", { ascending: true });
+
+  // If there are no messages yet, show the welcome message immediately
+  if (!data || data.length === 0) {
+    const welcome = {
+      sender: "system",
+      message:
+        "👋 Welcome to Vertex Capital Finance.\n\nHow can we help you today?\n\nOne of our investment advisors will reply shortly after you send your message.",
+    };
+
+    // Show it immediately
+    setMessages([welcome]);
+
+    // Save it to the database
+    await supabase.from("chat_messages").insert({
+      conversation_id: conversationId,
+      sender: "system",
+      message: welcome.message,
+    });
+  } else {
+    setMessages(data);
+  }
+
+  subscribe(conversationId);
+}
 
   async function loadMessages(id: string) {
     const { data } = await supabase
@@ -200,14 +227,16 @@ openChat
 
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
 
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
+            {messages.map((msg, index) => (
+  <div
+    key={msg.id ?? index}
                 className={`rounded-2xl px-4 py-3 ${
-                  msg.sender === "user"
-                    ? "bg-[#D4AF37] text-black ml-12"
-                    : "bg-[#0E223D] text-white mr-12"
-                }`}
+  msg.sender === "user"
+    ? "bg-[#D4AF37] text-black ml-12"
+    : msg.sender === "system"
+    ? "bg-green-700 text-white mr-12"
+    : "bg-[#0E223D] text-white mr-12"
+}`}
               >
                 {msg.message}
               </div>

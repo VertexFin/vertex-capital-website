@@ -80,12 +80,14 @@ Live Support
 Need help with your investment?
 </p>
 
-<Link
-  href="/support"
-  className="inline-block mt-5 bg-[#D4AF37] text-black px-5 py-3 rounded-xl font-bold"
+<button
+  onClick={() => {
+    window.dispatchEvent(new Event("open-chat"));
+  }}
+  className="mt-5 bg-[#D4AF37] text-black px-5 py-3 rounded-xl font-bold"
 >
   Chat With An Advisor
-</Link>
+</button>
 
               <p>
                 Address: Mark Richards, 18 Haast Close, Kelson, Lower Hutt, 5010 , New Zealand.
