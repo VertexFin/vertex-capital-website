@@ -9,22 +9,57 @@ export default function AdminMessages() {
   const [selected, setSelected] = useState<any>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [reply, setReply] = useState("");
+  const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
+  
     loadConversations();
   }, []);
 
   async function loadConversations() {
-
-  const { data, error } = await supabase
+  // Load conversations
+  const { data: conversationsData, error } = await supabase
     .from("chat_conversations")
-    .select("*");
+    .select("*")
+    .order("created_at", { ascending: false });
 
-  console.log("Conversations:", data);
-  console.log("Error:", error);
+  if (error) {
+    console.log(error);
+    return;
+  }
 
-  setConversations(data || []);
+  // Load all profiles
+  const { data: profiles } = await supabase
+    .from("profile")
+    .select("id, full_name, email");
 
+  const merged =
+    conversationsData?.map((conversation) => ({
+      ...conversation,
+      profile: profiles?.find(
+        (p) => p.id === conversation.user_id
+      ),
+    })) || [];
+
+  // 🔴 Get unread count for each conversation
+  const counts: Record<string, number> = {};
+
+  for (const conversation of merged) {
+    const { count } = await supabase
+      .from("chat_messages")
+      .select("*", {
+        count: "exact",
+        head: true,
+      })
+      .eq("conversation_id", conversation.id)
+      .eq("sender", "user")
+      .eq("is_read", false);
+
+    counts[conversation.id] = count || 0;
+  }
+
+  setUnreadCounts(counts);
+  setConversations(merged);
 }
 
   async function openConversation(conversation: any) {
@@ -64,6 +99,7 @@ export default function AdminMessages() {
     );
 
   channel.subscribe();
+  loadConversations();
 }
 
   async function loadMessages(id: string) {
@@ -142,10 +178,17 @@ async function rejectWithdrawal(id: string) {
 
             >
 
-              <h3 className="text-white font-bold">
-                {item.profile?.full_name ||
-                  "Investor"}
-              </h3>
+              <div className="flex justify-between items-center">
+  <h3 className="text-white font-bold">
+    {item.profile?.full_name || "Investor"}
+  </h3>
+
+  {unreadCounts[item.id] > 0 && (
+    <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">
+      {unreadCounts[item.id]}
+    </span>
+  )}
+</div>
 
               <p className="text-gray-400 text-sm">
                 {item.profile?.email}

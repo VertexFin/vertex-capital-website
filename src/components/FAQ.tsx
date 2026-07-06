@@ -13,11 +13,6 @@ export default function FAQ() {
         "We employ strict risk management practices, transparent operations, and professional oversight to protect investor funds.",
     },
     {
-      question: "What is the minimum investment amount?",
-      answer:
-        "Investment plans start from $100,000 depending on the selected package.",
-    },
-    {
       question: "Can I withdraw before maturity?",
       answer:
         "Early withdrawal policies vary depending on the investment plan selected.",
