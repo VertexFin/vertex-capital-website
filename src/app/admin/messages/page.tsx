@@ -68,11 +68,15 @@ export default function AdminMessages() {
   setSelected(conversation);
 
   // 2. Mark messages as read
-  await supabase
-    .from("chat_messages")
-    .update({ is_read: true })
-    .eq("conversation_id", conversation.id)
-    .eq("sender", "user");
+  const { data, error } = await supabase
+  .from("chat_messages")
+  .update({ is_read: true })
+  .eq("conversation_id", conversation.id)
+  .eq("sender", "user")
+  .select();
+
+console.log("Read update:", data);
+console.log("Read update error:", error);
 
   // 3. Load messages immediately
   await loadMessages(conversation.id);
@@ -100,6 +104,7 @@ export default function AdminMessages() {
 
   channel.subscribe();
   loadConversations();
+  window.dispatchEvent(new Event("messages-read"));
 }
 
   async function loadMessages(id: string) {

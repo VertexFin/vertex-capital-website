@@ -49,6 +49,8 @@ openChat
   const [loading, setLoading] =
     useState(false);
 
+    const [unread, setUnread] = useState(0);
+
   const bottomRef =
     useRef<HTMLDivElement>(null);
 
@@ -145,6 +147,20 @@ openChat
     setMessages(data || []);
   }
 
+  async function loadUnread() {
+  const { count } = await supabase
+    .from("chat_messages")
+    .select("*", {
+      count: "exact",
+      head: true,
+    })
+    .eq("conversation_id", conversationId)
+    .eq("sender", "admin")
+    .eq("is_read", false);
+
+  setUnread(count || 0);
+}
+
   function subscribe(id: string) {
     supabase
       .channel("chat-" + id)
@@ -157,7 +173,10 @@ openChat
           filter:
             "conversation_id=eq." + id,
         },
-        () => loadMessages(id)
+        () => {
+  loadMessages(id);
+  loadUnread();
+}
       )
       .subscribe();
   }
@@ -184,16 +203,26 @@ openChat
   return (
     <>
       {!open && (
-        <button
-          onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 h-16 w-16 rounded-full bg-[#D4AF37] text-black shadow-2xl z-[999999]"
-        >
-          <div className="flex items-center justify-center h-full">
-            <FiMessageCircle size={28} />
-          </div>
-        </button>
+  <div className="fixed bottom-6 right-6 z-[999999]">
+
+    <button
+      onClick={() => setOpen(true)}
+      className="relative h-16 w-16 rounded-full bg-[#D4AF37] text-black shadow-2xl"
+    >
+      <div className="flex items-center justify-center h-full">
+        <FiMessageCircle size={28} />
+      </div>
+
+      {unread > 0 && (
+        <span className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-red-600 text-white text-xs font-bold flex items-center justify-center">
+          {unread}
+        </span>
       )}
 
+    </button>
+
+  </div>
+)}
       {open && (
         <div className="fixed bottom-5 right-5 w-[95vw] max-w-md h-[75vh] bg-[#071426] rounded-3xl border border-white/10 shadow-2xl z-[999999] flex flex-col">
 
