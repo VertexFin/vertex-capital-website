@@ -104,6 +104,12 @@ openChat
 
   setConversationId(conversationId);
 
+await loadMessages(conversationId);
+
+await loadUnread(conversationId);
+
+subscribe(conversationId);
+
   // Load previous messages
   const { data } = await supabase
     .from("chat_messages")
@@ -147,39 +153,45 @@ openChat
     setMessages(data || []);
   }
 
-  async function loadUnread() {
+  async function loadUnread(id: string) {
   const { count } = await supabase
     .from("chat_messages")
     .select("*", {
       count: "exact",
       head: true,
     })
-    .eq("conversation_id", conversationId)
+    .eq("conversation_id", id)
     .eq("sender", "admin")
     .eq("is_read", false);
 
   setUnread(count || 0);
+  console.log("Unread admin replies:", count);
 }
 
-  function subscribe(id: string) {
-    supabase
-      .channel("chat-" + id)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "chat_messages",
-          filter:
-            "conversation_id=eq." + id,
-        },
-        () => {
-  loadMessages(id);
-  loadUnread();
-}
-      )
-      .subscribe();
+ let chatChannel: any;
+
+function subscribe(id: string) {
+  if (chatChannel) {
+    supabase.removeChannel(chatChannel);
   }
+
+  chatChannel = supabase
+    .channel("chat-" + id)
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "chat_messages",
+        filter: "conversation_id=eq." + id,
+      },
+      () => {
+        loadMessages(id);
+        loadUnread(id);
+      }
+    )
+    .subscribe();
+} 
 
   async function sendMessage() {
     if (!input.trim()) return;
