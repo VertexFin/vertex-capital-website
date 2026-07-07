@@ -108,6 +108,8 @@ await loadMessages(conversationId);
 
 await loadUnread(conversationId);
 
+await markAdminMessagesAsRead(conversationId);
+
 subscribe(conversationId);
 
   // Load previous messages
@@ -212,13 +214,30 @@ function subscribe(id: string) {
     setLoading(false);
   }
 
+ async function markAdminMessagesAsRead(id: string) {
+  await supabase
+    .from("chat_messages")
+    .update({ is_read: true })
+    .eq("conversation_id", id)
+    .eq("sender", "admin")
+    .eq("is_read", false);
+
+  loadUnread(id);
+} 
+
   return (
     <>
       {!open && (
   <div className="fixed bottom-6 right-6 z-[999999]">
 
     <button
-      onClick={() => setOpen(true)}
+     onClick={async () => {
+  setOpen(true);
+
+  if (conversationId) {
+    await markAdminMessagesAsRead(conversationId);
+  }
+}}
       className="relative h-16 w-16 rounded-full bg-[#D4AF37] text-black shadow-2xl"
     >
       <div className="flex items-center justify-center h-full">
