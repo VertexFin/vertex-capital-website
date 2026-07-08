@@ -126,7 +126,7 @@ export default function Navbar() {
 
 
 
-<nav className="hidden xl:flex gap-6 text-white">
+<nav className="hidden lg:flex gap-6 text-white">
 
 
 <Link href="/">Home</Link>
@@ -167,7 +167,7 @@ Admin
 
 
 
-<div className="hidden xl:flex items-center gap-4">
+<div className="hidden lg:flex items-center gap-4">
 
 
 {user ? (
@@ -209,7 +209,7 @@ Start Investing
 
 <button
 onClick={() => setOpen(!open)}
-className="xl:hidden text-3xl text-white"
+className="lg:hidden text-3xl text-white"
 >
 {open ? <FiX/> : <FiMenu/>}
 </button>
@@ -222,8 +222,7 @@ className="xl:hidden text-3xl text-white"
 
 
 {open && (
-
-<div className="xl:hidden bg-[#071426] p-6 text-white flex flex-col gap-5">
+  <div className="lg:hidden bg-[#071426] p-6 text-white flex flex-col gap-5">
 
 
 <Link href="/">Home</Link>
