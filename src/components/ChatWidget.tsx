@@ -8,6 +8,7 @@ import {
   FiX,
 } from "react-icons/fi";
 
+
 type Message = {
   id?: string;
   sender: string;
@@ -54,6 +55,8 @@ openChat
   const bottomRef =
     useRef<HTMLDivElement>(null);
 
+    const channelRef = useRef<any>(null);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -63,6 +66,14 @@ openChat
   useEffect(() => {
     initializeChat();
   }, []);
+
+  useEffect(() => {
+  return () => {
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+    }
+  };
+}, []);
 
   async function initializeChat() {
   const {
@@ -170,14 +181,14 @@ subscribe(conversationId);
   console.log("Unread admin replies:", count);
 }
 
- let chatChannel: any;
+ 
 
 function subscribe(id: string) {
-  if (chatChannel) {
-    supabase.removeChannel(chatChannel);
+  if (channelRef.current) {
+    supabase.removeChannel(channelRef.current);
   }
 
-  chatChannel = supabase
+  channelRef.current = supabase
     .channel("chat-" + id)
     .on(
       "postgres_changes",
@@ -185,7 +196,7 @@ function subscribe(id: string) {
         event: "*",
         schema: "public",
         table: "chat_messages",
-        filter: "conversation_id=eq." + id,
+        filter: `conversation_id=eq.${id}`,
       },
       () => {
         loadMessages(id);
@@ -193,7 +204,7 @@ function subscribe(id: string) {
       }
     )
     .subscribe();
-} 
+}
 
   async function sendMessage() {
     if (!input.trim()) return;
