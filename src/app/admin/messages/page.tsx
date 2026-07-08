@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 export default function AdminMessages() {
@@ -10,11 +10,19 @@ export default function AdminMessages() {
   const [messages, setMessages] = useState<any[]>([]);
   const [reply, setReply] = useState("");
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
-
+  const channelRef = useRef<any>(null);
   useEffect(() => {
   
     loadConversations();
   }, []);
+
+  useEffect(() => {
+  return () => {
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+    }
+  };
+}, []);
 
   async function loadConversations() {
   // Load conversations
@@ -82,10 +90,12 @@ console.log("Read update error:", error);
   await loadMessages(conversation.id);
 
   // 4. REMOVE old channel before creating new one
-  supabase.removeAllChannels();
+  if (channelRef.current) {
+  supabase.removeChannel(channelRef.current);
+}
 
   // 5. Create fresh realtime channel
-  const channel = supabase
+  channelRef.current = supabase
     .channel("admin-" + conversation.id)
 
     .on(
@@ -99,10 +109,12 @@ console.log("Read update error:", error);
       },
       () => {
         loadMessages(conversation.id);
+        loadConversations();
       }
-    );
+    )
+    .subscribe();
 
-  channel.subscribe();
+  
   loadConversations();
   window.dispatchEvent(new Event("messages-read"));
 }
@@ -126,25 +138,21 @@ console.log("Read update error:", error);
 }
 
   async function sendReply() {
+  if (!reply.trim()) return;
 
-    if (!reply.trim()) return;
+  await supabase
+    .from("chat_messages")
+    .insert({
+      conversation_id: selected.id,
+      sender: "admin",
+      message: reply,
+    });
 
-    await supabase
-      .from("chat_messages")
-      .insert({
+  setReply("");
 
-        conversation_id: selected.id,
-
-        sender: "admin",
-
-        message: reply,
-
-      });
-
-    setReply("");
-
-  }
-
+  await loadMessages(selected.id);
+  await loadConversations();
+}
 
 async function rejectWithdrawal(id: string) {
   await supabase
