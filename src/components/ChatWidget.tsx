@@ -52,6 +52,8 @@ openChat
 
     const [unread, setUnread] = useState(0);
 
+    const [userProfile, setUserProfile] = useState<any>(null);
+
   const bottomRef =
     useRef<HTMLDivElement>(null);
 
@@ -79,6 +81,16 @@ openChat
   const {
     data: { session },
   } = await supabase.auth.getSession();
+
+  if (session) {
+  const { data: profile } = await supabase
+    .from("profile")
+    .select("full_name, email")
+    .eq("id", session.user.id)
+    .single();
+
+  setUserProfile(profile);
+}
 
   // If user is not logged in, just show a local welcome message
   if (!session) {
@@ -207,23 +219,41 @@ function subscribe(id: string) {
 }
 
   async function sendMessage() {
-    if (!input.trim()) return;
+  if (!input.trim()) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    await supabase
-      .from("chat_messages")
-      .insert({
-        conversation_id:
-          conversationId,
-        sender: "user",
-        message: input,
+  const message = input;
+
+  const { error } = await supabase
+    .from("chat_messages")
+    .insert({
+      conversation_id: conversationId,
+      sender: "user",
+      message,
+    });
+
+  if (!error) {
+    try {
+      await fetch("/api/send-chat-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: userProfile?.full_name || "Customer",
+          email: userProfile?.email || "No email",
+          message,
+        }),
       });
-
-    setInput("");
-
-    setLoading(false);
+    } catch (err) {
+      console.log("Email notification failed:", err);
+    }
   }
+
+  setInput("");
+  setLoading(false);
+}
 
  async function markAdminMessagesAsRead(id: string) {
   await supabase
